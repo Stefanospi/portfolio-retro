@@ -480,10 +480,14 @@ body {
   transition: opacity 0.5s ease;
 }
 
+/* --- EXIT Button --- */
+/* Base rule: Top Right */
 .exit-button {
   position: fixed;
   top: 10px;
   right: 10px;
+  bottom: auto; /* Explicitly unset bottom */
+  left: auto; /* Explicitly unset left */
   background: rgba(255, 0, 0, 0.9);
   color: #ffffff;
   border: 2px solid #ffff00;
@@ -1178,11 +1182,14 @@ body {
   }
 }
 
-/* 9. Effects Toggle Button */
+/* --- Effects Toggle Button (FX) --- */
+/* Base rule: Bottom Right */
 .effects-toggle {
   position: fixed;
   bottom: 10px;
   right: 10px;
+  top: auto; /* Explicitly unset top */
+  left: auto; /* Explicitly unset left */
   background: rgba(0, 0, 0, 0.8);
   color: #00ff00;
   border: 2px solid #00ff00;
@@ -1190,7 +1197,7 @@ body {
   font-family: "Press Start 2P", monospace;
   font-size: 0.7em;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 1000; /* Lower z-index than exit button if overlap matters */
   transition: all 0.3s ease;
   backdrop-filter: blur(5px);
 }
@@ -1315,9 +1322,8 @@ button,
     max-width: 800px;
     padding: 15px;
   }
-  .exit-button {
-    top: 60px; /* Sposta più in basso per evitare sovrapposizione */
-  }
+  /* Tablet: EXIT button remains top-right (no specific rule needed) */
+  /* Tablet: FX button remains bottom-right (no specific rule needed) */
   .arcade-screen {
     min-height: 500px;
     max-height: 80vh;
@@ -1489,20 +1495,20 @@ button,
     font-size: 0.75em;
   }
 
-  /* Fixed position elements for mobile */
+  /* --- Mobile Button Positioning --- */
+  /* FX Button: remains bottom-right */
   .effects-toggle {
     font-size: 0.7em;
     padding: 6px 10px;
-    bottom: 10px;
-    right: 10px;
+    /* Base rule bottom: 10px; right: 10px; applies */
   }
 
+  /* EXIT Button: remains top-right */
   .exit-button {
-    top: auto;
-    bottom: 80px; /* Posiziona sopra il pulsante FX */
-    right: 10px;
     font-size: 0.8em;
     padding: 6px 12px;
+    /* Base rule top: 10px; right: 10px; applies */
+    /* REMOVED bottom/left positioning */
   }
 
   /* Boot sequence adjustments */
@@ -1583,16 +1589,17 @@ button,
     font-size: 0.8em;
   }
 
-  /* Smaller buttons */
+  /* Smaller buttons - size adjusts, position remains top/bottom right */
   .exit-button {
     font-size: 0.7em;
     padding: 5px 10px;
-    bottom: 70px; /* Leggermente più in alto su schermi piccoli */
+    /* position top: 10px; right: 10px; inherited */
   }
 
   .effects-toggle {
     font-size: 0.6em;
     padding: 5px 8px;
+    /* position bottom: 10px; right: 10px; inherited */
   }
 
   /* Smaller boot sequence */
@@ -1675,13 +1682,7 @@ button,
     height: 20px;
     margin: 15px auto;
   }
-  .exit-button {
-    top: 50px; /* Sotto la navbar in landscape */
-    bottom: auto;
-    right: 10px;
-    font-size: 0.7em;
-    padding: 5px 10px;
-  }
+  /* No specific rules needed for buttons, they inherit correct positions */
 }
 
 /* ===================== */
@@ -1718,26 +1719,20 @@ button,
       padding-right: max(0px, env(safe-area-inset-right));
     }
 
-    .exit-button {
-      top: max(10px, env(safe-area-inset-top) + 10px);
-      right: max(10px, env(safe-area-inset-right) + 10px);
-    }
-
+    /* FX Button Safe Area */
     .effects-toggle {
       bottom: max(10px, env(safe-area-inset-bottom) + 10px);
       right: max(10px, env(safe-area-inset-right) + 10px);
     }
+
+    /* EXIT Button Safe Area */
     .exit-button {
-      bottom: max(80px, env(safe-area-inset-bottom) + 80px);
+      top: max(10px, env(safe-area-inset-top) + 10px);
       right: max(10px, env(safe-area-inset-right) + 10px);
+      bottom: auto; /* Ensure bottom is not used */
     }
   }
-  @media (max-width: 768px) and (orientation: landscape) {
-    .exit-button {
-      top: max(50px, env(safe-area-inset-top) + 50px);
-      right: max(10px, env(safe-area-inset-right) + 10px);
-    }
-  }
+  /* No landscape specific safe area rules needed for buttons */
 }
 
 /* Performance optimization */
