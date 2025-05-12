@@ -29,18 +29,18 @@
       </div>
       <div class="arcade-screen-bezel">
         <div class="arcade-screen">
+          <!-- Start Screen -->
           <div id="start-screen" class="start-screen-overlay">
             <div class="start-message">
               <p class="insert-coin-text">INSERT CV</p>
               <button id="press-start-button" type="button">PRESS START</button>
-              <!-- type="button" è una buona pratica -->
               <p class="start-prompt">(Click to Begin Your Adventure)</p>
             </div>
           </div>
 
+          <!-- Portfolio Content -->
           <div id="portfolio-content" class="hidden">
             <div class="scanlines"></div>
-            <!-- Rinominato da .container a .portfolio-inner-container -->
             <div class="portfolio-inner-container">
               <header class="title-screen">
                 <h1 class="game-title">STEFANO SPITALERI</h1>
@@ -119,10 +119,8 @@
 
                 <section id="tech-skills" class="game-section hidden">
                   <h3 class="section-title">// SKILL_TREE_</h3>
-                  <!-- Utilizzo della griglia Bootstrap -->
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <!-- mb-3 per margine inferiore su mobile quando impilati -->
                       <div class="skill-category">
                         <h4>> Frontend Development:</h4>
                         <ul>
@@ -295,8 +293,8 @@
                   <h3 class="section-title">// CONTACT_NPC_</h3>
                   <ul class="contact-list">
                     <li>
-                      <span class="icon-contact mail"></span>
-                      <a href="mailto:sspitaleri26@gmail.com"
+                      <span class="icon-contact mail"></span
+                      ><a href="mailto:sspitaleri26@gmail.com"
                         >sspitaleri26@gmail.com</a
                       >
                     </li>
@@ -304,16 +302,16 @@
                       <span class="icon-contact phone"></span> +39 3517434672
                     </li>
                     <li>
-                      <span class="icon-contact linkedin"></span>
-                      <a
+                      <span class="icon-contact linkedin"></span
+                      ><a
                         href="https://www.linkedin.com/in/stefano-spitaleri/"
                         target="_blank"
                         >LinkedIn</a
                       >
                     </li>
                     <li>
-                      <span class="icon-contact github"></span>
-                      <a href="https://github.com/Stefanospi" target="_blank"
+                      <span class="icon-contact github"></span
+                      ><a href="https://github.com/Stefanospi" target="_blank"
                         >GitHub</a
                       >
                     </li>
@@ -337,15 +335,37 @@
               </footer>
             </div>
           </div>
+          <!-- End #portfolio-content -->
         </div>
+        <!-- End .arcade-screen -->
       </div>
+      <!-- End .arcade-screen-bezel -->
       <div class="arcade-controls-panel">
         <div class="joystick-base"></div>
         <div class="button red"></div>
         <div class="button blue"></div>
       </div>
     </div>
+    <!-- End .arcade-cabinet -->
 
+    <!-- Options Button and Menu -->
+    <button id="options-button" class="options-button hidden" title="Options">
+      ⚙️
+    </button>
+    <div id="options-menu" class="options-menu hidden">
+      <ul>
+        <li>
+          <button id="menu-toggle-fx" class="menu-option-button">
+            Toggle Effects
+          </button>
+        </li>
+        <li>
+          <button id="menu-exit" class="menu-option-button">Exit Game</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Audio Elements -->
     <audio
       id="start-sound"
       src="assets/sounds/start.wav"
@@ -362,8 +382,7 @@
       preload="auto"
     ></audio>
 
-    <!-- Bootstrap JS Bundle (Popper.js incluso, opzionale se non usi componenti JS di Bootstrap) -->
-
+    <!-- Scripts -->
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
   </body>

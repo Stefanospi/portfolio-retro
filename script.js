@@ -1,69 +1,76 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Core Elements
   const startScreen = document.getElementById("start-screen");
   const pressStartButton = document.getElementById("press-start-button");
   const portfolioContent = document.getElementById("portfolio-content");
   const arcadeScreen = document.querySelector(".arcade-screen");
 
+  // Audio Elements
   const audioStart = document.getElementById("start-sound");
   const audioMenuHover = document.getElementById("menu-hover-sound");
   const audioMenuSelect = document.getElementById("menu-select-sound");
 
+  // Options Menu Elements
+  const optionsButton = document.getElementById("options-button");
+  const optionsMenu = document.getElementById("options-menu");
+  const menuToggleFxButton = document.getElementById("menu-toggle-fx");
+  const menuExitButton = document.getElementById("menu-exit");
+
+  // Portfolio Elements
   const menuItems = document.querySelectorAll(".menu-item");
   const sections = document.querySelectorAll(".game-section");
+  const gameTitle = document.querySelector("#portfolio-content .game-title");
+
+  // State Variables
   let currentSectionId = null;
-  let retroEffectsInstance = null;
+  let retroEffectsInstance = null; // Will hold the RetroEffects instance
+  let originalTitleText = "";
+  let i = 0; // Typewriter index
+
+  // --- Utility Functions ---
 
   function playSound(audioElement) {
     if (
       audioElement &&
       audioElement.src &&
-      audioElement.src !== window.location.href
+      audioElement.src !== window.location.href // Prevent playing if src is invalid
     ) {
       audioElement.currentTime = 0;
       audioElement.play().catch((error) => {
-        console.warn(
-          "Audio playback was prevented (this is common before user interaction):",
-          error
-        );
+        // Common warning, especially on first load before user interaction
+        console.warn("Audio playback prevented:", error);
       });
+    } else if (
+      audioElement &&
+      (!audioElement.src || audioElement.src === window.location.href)
+    ) {
+      console.warn("Audio source missing or invalid for:", audioElement.id);
     }
   }
 
-  // Forza sempre la visualizzazione del start screen all'inizio
+  // --- Initialization ---
+
+  // Force start screen initially
   if (startScreen && portfolioContent) {
     portfolioContent.classList.add("hidden");
     startScreen.classList.remove("hidden");
+    if (optionsButton) optionsButton.classList.add("hidden"); // Hide options on start
+    if (optionsMenu) optionsMenu.classList.add("hidden"); // Ensure menu is hidden
   }
 
-  if (startScreen && pressStartButton && portfolioContent) {
-    pressStartButton.addEventListener("click", () => {
-      playSound(audioStart);
-
-      // IMPORTANTE: Nascondi subito lo start screen prima di mostrare il boot
-      startScreen.classList.add("hidden");
-
-      // Crea la sequenza di boot DENTRO l'arcade screen
-      createBootSequence(() => {
-        portfolioContent.classList.remove("hidden");
-        showSection("chi-sono");
-        if (gameTitle && !gameTitle.textContent.trim() && originalTitleText) {
-          typeWriterTitle();
-        }
-        initializeFooterBlink();
-
-        // Inizializza effetti retro dopo il boot
-        setTimeout(() => initializeRetroEffects(), 100);
-
-        // Crea il pulsante EXIT
-        createExitButton();
-      });
-    });
+  if (gameTitle) {
+    originalTitleText = gameTitle.textContent.trim(); // Store original title
+    gameTitle.textContent = ""; // Clear for typewriter
   }
 
-  // Crea la sequenza di boot DENTRO l'arcade screen
+  // --- Boot Sequence ---
+
   function createBootSequence(callback) {
     const bootOverlay = document.createElement("div");
     bootOverlay.className = "boot-sequence";
+    // Ensure boot sequence overrides .hidden if applied to arcade-screen
+    bootOverlay.style.display = "flex";
+    bootOverlay.style.opacity = "1";
     bootOverlay.innerHTML = `
       <div class="boot-text">
         <p>STEFANO OS v1.337</p>
@@ -75,118 +82,118 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // Aggiungi il boot overlay DENTRO l'arcade screen
+    // Clear arcade screen and add boot overlay
     if (arcadeScreen) {
-      // Clear any existing content to ensure boot is visible
+      // Detach main content temporarily to ensure boot is visible
+      if (startScreen && startScreen.parentNode === arcadeScreen)
+        arcadeScreen.removeChild(startScreen);
+      if (portfolioContent && portfolioContent.parentNode === arcadeScreen)
+        arcadeScreen.removeChild(portfolioContent);
+      // Clear any other potential children (like previous boot sequences)
       arcadeScreen.innerHTML = "";
       arcadeScreen.appendChild(bootOverlay);
-
-      // Force boot overlay to be visible
-      bootOverlay.style.display = "flex";
-      bootOverlay.style.opacity = "1";
+    } else {
+      console.error("Arcade screen not found for boot sequence.");
+      if (callback) callback(); // Still run callback if screen missing
+      return;
     }
 
-    // Animazione progress bar
+    // Progress bar animation
     let progress = 0;
     const progressFill = bootOverlay.querySelector(".progress-fill");
+    const loadingText = bootOverlay.querySelector(".loading-dots");
     const progressInterval = setInterval(() => {
       progress += Math.random() * 20;
       if (progress >= 100) {
         progress = 100;
         clearInterval(progressInterval);
 
-        // Mostra "READY!" e poi esegui callback
-        const loadingText = bootOverlay.querySelector(".loading-dots");
         loadingText.innerHTML = "READY!";
         loadingText.classList.add("ready");
 
+        // Fade out boot sequence
         setTimeout(() => {
           bootOverlay.classList.add("fade-out");
+          // Remove boot sequence after fade out
           setTimeout(() => {
-            bootOverlay.remove();
-            // Re-add the content containers
-            if (arcadeScreen) {
-              arcadeScreen.appendChild(startScreen);
-              arcadeScreen.appendChild(portfolioContent);
+            if (bootOverlay.parentNode) {
+              bootOverlay.parentNode.removeChild(bootOverlay);
             }
-            if (callback) callback();
-          }, 500);
-        }, 500);
+            // Re-attach main content AFTER boot completes and is removed
+            if (arcadeScreen) {
+              // Make sure they exist before appending
+              if (startScreen) arcadeScreen.appendChild(startScreen);
+              if (portfolioContent) arcadeScreen.appendChild(portfolioContent);
+            }
+            if (callback) callback(); // Execute the callback function
+          }, 500); // Matches fade-out duration
+        }, 500); // Delay before fade out starts
       }
-      progressFill.style.width = progress + "%";
-    }, 100);
+      if (progressFill) progressFill.style.width = progress + "%";
+    }, 100); // Interval duration
   }
 
-  // Crea il pulsante EXIT
-  function createExitButton() {
-    const exitButton = document.createElement("button");
-    exitButton.className = "exit-button";
-    exitButton.innerHTML = "🚪 EXIT";
-    exitButton.title = "Return to start screen";
+  // --- Game State Management ---
 
-    exitButton.addEventListener("click", () => {
-      playSound(audioMenuSelect);
+  function exitToStartScreen() {
+    playSound(audioMenuSelect);
 
-      // Nascondi portfolio e mostra start screen
-      portfolioContent.classList.add("hidden");
-      startScreen.classList.remove("hidden");
+    // Hide portfolio, show start screen
+    if (portfolioContent) portfolioContent.classList.add("hidden");
+    if (startScreen) startScreen.classList.remove("hidden");
 
-      // Reset stati
-      currentSectionId = null;
-      sections.forEach((section) => section.classList.add("hidden"));
-      menuItems.forEach((item) => item.classList.remove("active"));
+    // Hide options menu and button
+    if (optionsMenu) optionsMenu.classList.add("hidden");
+    if (optionsButton) optionsButton.classList.add("hidden");
 
-      // Reset del titolo
-      const gameTitle = document.querySelector(
-        "#portfolio-content .game-title"
-      );
-      if (gameTitle) {
-        gameTitle.textContent = "";
-        i = 0; // Reset del contatore typewriter
-      }
+    // Reset portfolio state
+    currentSectionId = null;
+    sections.forEach((section) => section.classList.add("hidden"));
+    menuItems.forEach((item) => item.classList.remove("active"));
 
-      // Reset scroll
-      if (arcadeScreen) {
-        arcadeScreen.scrollTo({ top: 0, behavior: "instant" });
-      }
+    // Reset title
+    if (gameTitle) {
+      gameTitle.textContent = "";
+      i = 0; // Reset typewriter counter
+    }
 
-      // Rimuovi il pulsante EXIT
-      exitButton.remove();
+    // Reset scroll
+    if (arcadeScreen) {
+      arcadeScreen.scrollTo({ top: 0, behavior: "instant" });
+    }
 
-      // Opzionale: disabilita temporaneamente gli effetti
-      if (retroEffectsInstance) {
-        retroEffectsInstance.effectsEnabled = false;
-        setTimeout(() => {
-          if (retroEffectsInstance) {
-            retroEffectsInstance.effectsEnabled = true;
-          }
-        }, 1000);
-      }
-    });
-
-    document.body.appendChild(exitButton);
+    // Optional: Disable effects when exiting?
+    // if (retroEffectsInstance && retroEffectsInstance.effectsEnabled) {
+    //   retroEffectsInstance.toggleEffects();
+    // }
   }
 
   function showSection(sectionId) {
     let sectionActuallyOpened = false;
+
+    // Toggle section visibility
     sections.forEach((section) => {
       if (section.id === sectionId) {
         if (
           section.id === currentSectionId &&
           !section.classList.contains("hidden")
         ) {
+          // Clicked active section: hide it
           section.classList.add("hidden");
-          currentSectionId = null;
+          currentSectionId = null; // No section is active
         } else {
+          // Clicked inactive section or different section: show it
           section.classList.remove("hidden");
-          currentSectionId = section.id;
+          currentSectionId = section.id; // Set as active
           sectionActuallyOpened = true;
         }
       } else {
+        // Hide all other sections
         section.classList.add("hidden");
       }
     });
 
+    // Update active state of menu items
     menuItems.forEach((item) => {
       item.classList.toggle(
         "active",
@@ -194,29 +201,96 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     });
 
-    // Migliorato scrolling - sempre torna su quando si cambia sezione
-    if (arcadeScreen) {
-      if (sectionActuallyOpened && currentSectionId) {
-        // Scrolla all'inizio del portfolio content quando si apre una sezione
-        arcadeScreen.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      } else if (!currentSectionId) {
-        // Se chiudiamo tutte le sezioni, torna all'inizio
-        arcadeScreen.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
-      }
+    // Scroll to top when a section is opened or all are closed
+    if (arcadeScreen && (sectionActuallyOpened || !currentSectionId)) {
+      arcadeScreen.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    // Aggiungi effetto glitch quando cambi sezione
+    // Apply transition effect if a section was opened
     if (sectionActuallyOpened) {
       applyGlitchOnTransition();
     }
+
+    // Hide options menu when changing sections
+    if (optionsMenu && !optionsMenu.classList.contains("hidden")) {
+      optionsMenu.classList.add("hidden");
+    }
   }
 
+  // --- UI Effects & Animations ---
+
+  function typeWriterTitle() {
+    if (gameTitle && i < originalTitleText.length) {
+      gameTitle.textContent += originalTitleText.charAt(i);
+      i++;
+      setTimeout(typeWriterTitle, 80); // Adjust speed if needed
+    }
+  }
+
+  function initializeFooterBlink() {
+    const hireButton = document.querySelector(".hire-me-flashing");
+    if (hireButton) {
+      // Clear previous interval if any to prevent duplicates
+      if (hireButton.blinkInterval) clearInterval(hireButton.blinkInterval);
+      hireButton.blinkInterval = setInterval(() => {
+        hireButton.style.visibility =
+          hireButton.style.visibility === "hidden" ? "visible" : "hidden";
+      }, 600); // Blink speed
+    }
+  }
+
+  function applyGlitchOnTransition() {
+    if (portfolioContent) {
+      portfolioContent.classList.add("glitch-transition");
+      setTimeout(() => {
+        portfolioContent.classList.remove("glitch-transition");
+      }, 300); // Duration of glitch effect
+    }
+  }
+
+  function applyPowerOnEffect() {
+    if (arcadeScreen) {
+      arcadeScreen.classList.add("screen-power-on");
+      setTimeout(() => {
+        arcadeScreen.classList.remove("screen-power-on");
+      }, 1000); // Duration of power-on effect
+    }
+  }
+
+  // --- Event Listeners ---
+
+  // Press Start Button
+  if (startScreen && pressStartButton && portfolioContent) {
+    pressStartButton.addEventListener("click", () => {
+      playSound(audioStart);
+      if (startScreen) startScreen.classList.add("hidden"); // Hide start screen immediately
+
+      createBootSequence(() => {
+        // Runs after boot sequence finishes
+        if (portfolioContent) portfolioContent.classList.remove("hidden");
+        showSection("chi-sono"); // Show default section
+
+        // Start typewriter if title exists and is empty
+        if (gameTitle && !gameTitle.textContent.trim() && originalTitleText) {
+          typeWriterTitle();
+        }
+        initializeFooterBlink(); // Start footer blink
+
+        // Initialize retro effects only once
+        if (typeof RetroEffects !== "undefined" && !retroEffectsInstance) {
+          retroEffectsInstance = new RetroEffects();
+        }
+        applyPowerOnEffect(); // Apply visual screen power-on
+
+        // Show the options button
+        if (optionsButton) optionsButton.classList.remove("hidden");
+      });
+    });
+  } else {
+    console.error("Start button or core containers not found.");
+  }
+
+  // Portfolio Menu Items
   menuItems.forEach((item) => {
     item.addEventListener("mouseover", () => {
       playSound(audioMenuHover);
@@ -225,83 +299,134 @@ document.addEventListener("DOMContentLoaded", () => {
       event.preventDefault();
       playSound(audioMenuSelect);
       const sectionId = item.dataset.section;
-      showSection(sectionId);
+      if (sectionId) {
+        showSection(sectionId);
+      }
     });
   });
 
-  const gameTitle = document.querySelector("#portfolio-content .game-title");
-  let originalTitleText = "";
-  if (gameTitle) originalTitleText = gameTitle.textContent.trim();
-  if (gameTitle) gameTitle.textContent = "";
-  let i = 0;
+  // Options Menu Logic
+  if (optionsButton && optionsMenu) {
+    // Toggle Menu Visibility
+    optionsButton.addEventListener("click", (event) => {
+      event.stopPropagation(); // Prevent click reaching document listener immediately
+      playSound(audioMenuSelect);
+      optionsMenu.classList.toggle("hidden");
+      // Optional: focus first item when opening
+      if (!optionsMenu.classList.contains("hidden")) {
+        optionsMenu.querySelector("button")?.focus();
+      }
+    });
 
-  function typeWriterTitle() {
-    if (gameTitle && i < originalTitleText.length) {
-      gameTitle.textContent += originalTitleText.charAt(i);
-      i++;
-      setTimeout(typeWriterTitle, 80);
+    // Toggle Effects Button
+    if (menuToggleFxButton) {
+      menuToggleFxButton.addEventListener("click", () => {
+        playSound(audioMenuSelect);
+        if (retroEffectsInstance) {
+          retroEffectsInstance.toggleEffects(); // Use the class method
+        } else {
+          console.warn("RetroEffects instance not available to toggle.");
+        }
+        optionsMenu.classList.add("hidden"); // Close menu
+      });
+    } else {
+      console.error("Toggle FX button not found in options menu.");
     }
+
+    // Exit Game Button
+    if (menuExitButton) {
+      menuExitButton.addEventListener("click", () => {
+        // Sound is played inside exitToStartScreen
+        exitToStartScreen();
+        // Menu is hidden by exit function
+      });
+    } else {
+      console.error("Exit button not found in options menu.");
+    }
+
+    // Close menu if clicking outside of it
+    document.addEventListener("click", (event) => {
+      if (optionsMenu && !optionsMenu.classList.contains("hidden")) {
+        // Check if the click was outside the menu AND not on the options button
+        if (
+          !optionsMenu.contains(event.target) &&
+          event.target !== optionsButton
+        ) {
+          optionsMenu.classList.add("hidden");
+        }
+      }
+    });
+
+    // Optional: Close menu with Escape key
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        optionsMenu &&
+        !optionsMenu.classList.contains("hidden")
+      ) {
+        optionsMenu.classList.add("hidden");
+      }
+    });
+  } else {
+    console.error("Options button or menu container not found.");
   }
+}); // End DOMContentLoaded
 
-  function initializeFooterBlink() {
-    const hireButton = document.querySelector(".hire-me-flashing");
-    if (hireButton) {
-      setInterval(() => {
-        hireButton.style.visibility =
-          hireButton.style.visibility === "hidden" ? "visible" : "hidden";
-      }, 600);
-    }
-  }
-
-  // Funzione per applicare glitch durante le transizioni
-  function applyGlitchOnTransition() {
-    const portfolioContent = document.querySelector("#portfolio-content");
-    if (portfolioContent) {
-      portfolioContent.classList.add("glitch-transition");
-      setTimeout(() => {
-        portfolioContent.classList.remove("glitch-transition");
-      }, 300);
-    }
-  }
-
-  // Inizializza effetti retro
-  function initializeRetroEffects() {
-    // Inizializza la classe RetroEffects se esiste
-    if (typeof RetroEffects !== "undefined") {
-      retroEffectsInstance = new RetroEffects();
-    }
-
-    // Aggiungi effetto di apertura
-    const arcadeScreen = document.querySelector(".arcade-screen");
-    if (arcadeScreen) {
-      arcadeScreen.classList.add("screen-power-on");
-      setTimeout(() => {
-        arcadeScreen.classList.remove("screen-power-on");
-      }, 1000);
-    }
-  }
-});
-
+// ============================
 // Retro Visual Effects Module
+// ============================
 class RetroEffects {
   constructor() {
-    this.effectsEnabled = true;
+    this.effectsEnabled = true; // Effects start enabled
     this.glitchInterval = null;
+    this.flickerInterval = null;
+    this.noiseInterval = null;
     this.crtEffectApplied = false;
 
-    // Inizializza effetti
+    console.log("Initializing Retro Effects..."); // Debug log
+
+    // Initialize effects immediately
     this.initCRTEffect();
     this.initGlitchEffect();
     this.initPixelTrail();
     this.initScreenFlicker();
     this.initStaticNoise();
     this.initRGBShift();
-    this.addEffectsToggle();
+    // No button creation needed here anymore
   }
 
-  // 1. Effetto CRT (Cathode Ray Tube)
+  // --- Public Method to Toggle Effects ---
+  toggleEffects() {
+    this.effectsEnabled = !this.effectsEnabled;
+    console.log("Retro Effects Enabled:", this.effectsEnabled);
+
+    // Toggle visibility of overlays
+    const crtOverlay = document.querySelector(".crt-overlay");
+    const noiseCanvas = document.querySelector(".static-noise");
+
+    if (crtOverlay)
+      crtOverlay.style.display = this.effectsEnabled ? "block" : "none";
+    if (noiseCanvas)
+      noiseCanvas.style.display = this.effectsEnabled ? "block" : "none";
+
+    // Optional: Add/remove a global class for CSS targeting if needed
+    document.body.classList.toggle(
+      "retro-effects-disabled",
+      !this.effectsEnabled
+    );
+
+    // Note: We are not stopping/starting intervals here for simplicity,
+    // the checks within the interval callbacks will prevent them from running.
+    // If performance on low-end devices is critical, consider clearing/restarting intervals.
+  }
+
+  // --- Effect Initializations ---
+
+  // 1. CRT Effect
   initCRTEffect() {
     if (this.crtEffectApplied) return;
+    const arcadeScreen = document.querySelector(".arcade-screen");
+    if (!arcadeScreen) return;
 
     const crtOverlay = document.createElement("div");
     crtOverlay.className = "crt-overlay";
@@ -310,16 +435,17 @@ class RetroEffects {
       <div class="crt-vignette"></div>
       <div class="crt-flicker"></div>
     `;
-
-    const arcadeScreen = document.querySelector(".arcade-screen");
-    if (arcadeScreen) {
-      arcadeScreen.appendChild(crtOverlay);
-      this.crtEffectApplied = true;
-    }
+    arcadeScreen.appendChild(crtOverlay);
+    this.crtEffectApplied = true;
+    // Set initial visibility based on state
+    crtOverlay.style.display = this.effectsEnabled ? "block" : "none";
+    console.log("CRT Effect Initialized.");
   }
 
-  // 2. Effetto Glitch Casuale
+  // 2. Glitch Effect
   initGlitchEffect() {
+    if (this.glitchInterval) clearInterval(this.glitchInterval); // Clear previous if any
+
     const glitchElements = [
       ".game-title",
       ".section-title",
@@ -328,26 +454,27 @@ class RetroEffects {
     ];
 
     this.glitchInterval = setInterval(() => {
-      if (!this.effectsEnabled) return;
+      if (!this.effectsEnabled) return; // Check flag
 
-      // Ridotta probabilità del glitch al 2% per essere meno invasivo
       if (Math.random() < 0.02) {
+        // Low probability
         const elements = document.querySelectorAll(glitchElements.join(","));
-        const element = elements[Math.floor(Math.random() * elements.length)];
-        if (element && !element.classList.contains("glitch-effect")) {
-          this.applyGlitch(element);
+        if (elements.length > 0) {
+          const element = elements[Math.floor(Math.random() * elements.length)];
+          // Check if element exists and doesn't already have glitch copies
+          if (element && !element.querySelector(".glitch-copy-1")) {
+            this.applyGlitch(element);
+          }
         }
       }
-    }, 2000);
+    }, 2000); // Interval
+    console.log("Glitch Effect Interval Initialized.");
   }
 
   applyGlitch(element) {
-    // Previeni glitch multipli sullo stesso elemento
-    if (element.querySelector(".glitch-copy-1")) return;
-
+    if (!element) return;
     element.classList.add("glitch-effect");
 
-    // Crea copie per l'effetto glitch
     const glitchCopy1 = document.createElement("span");
     const glitchCopy2 = document.createElement("span");
     glitchCopy1.textContent = element.textContent;
@@ -358,179 +485,168 @@ class RetroEffects {
     element.appendChild(glitchCopy1);
     element.appendChild(glitchCopy2);
 
-    // Rimuovi effetto dopo animazione
     setTimeout(() => {
-      element.classList.remove("glitch-effect");
-      glitchCopy1.remove();
-      glitchCopy2.remove();
-    }, 400);
+      // Check if element still exists before removing class/children
+      if (element) {
+        element.classList.remove("glitch-effect");
+        // Check if copies still exist before removing
+        if (glitchCopy1 && glitchCopy1.parentNode === element)
+          glitchCopy1.remove();
+        if (glitchCopy2 && glitchCopy2.parentNode === element)
+          glitchCopy2.remove();
+      }
+    }, 400); // Glitch duration
   }
 
   // 3. Pixel Trail Effect
   initPixelTrail() {
     let lastTime = 0;
     const pixels = [];
-    const maxPixels = 8;
+    const maxPixels = 8; // Max trail length
 
     document.addEventListener("mousemove", (e) => {
-      if (!this.effectsEnabled) return;
+      if (!this.effectsEnabled) return; // Check flag
 
-      // Limita la frequenza di creazione pixel
       const currentTime = Date.now();
-      if (currentTime - lastTime < 50) return; // 20 FPS
+      if (currentTime - lastTime < 50) return; // Throttle to ~20fps
       lastTime = currentTime;
 
-      const rect = document
-        .querySelector(".arcade-screen")
-        ?.getBoundingClientRect();
-      if (!rect) return;
+      const arcadeScreen = document.querySelector(".arcade-screen");
+      if (!arcadeScreen) return;
+      const rect = arcadeScreen.getBoundingClientRect();
 
+      // Calculate mouse position relative to the arcade screen
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
 
-      // Crea pixel trail solo dentro lo schermo arcade
+      // Create pixel only if mouse is inside the arcade screen
       if (
         mouseX >= 0 &&
         mouseY >= 0 &&
         mouseX <= rect.width &&
         mouseY <= rect.height
       ) {
-        this.createPixel(mouseX, mouseY, pixels, maxPixels);
+        this.createPixel(mouseX, mouseY, pixels, maxPixels, arcadeScreen);
       }
     });
+    console.log("Pixel Trail Listener Initialized.");
   }
 
-  createPixel(x, y, pixels, maxPixels) {
+  createPixel(x, y, pixels, maxPixels, container) {
+    // Double-check flag just before creating
+    if (!this.effectsEnabled || !container) return;
+
     const pixel = document.createElement("div");
     pixel.className = "pixel-trail";
     pixel.style.left = x + "px";
     pixel.style.top = y + "px";
 
-    const arcadeScreen = document.querySelector(".arcade-screen");
-    arcadeScreen.appendChild(pixel);
+    container.appendChild(pixel);
     pixels.push(pixel);
 
-    // Fade out animation
+    // Fade out and remove
     setTimeout(() => {
       pixel.style.opacity = "0";
       setTimeout(() => {
-        pixel.remove();
-        pixels.shift();
-      }, 300);
-    }, 100);
+        if (pixel.parentNode) pixel.remove();
+        // Remove from array safely
+        const index = pixels.indexOf(pixel);
+        if (index > -1) pixels.splice(index, 1);
+      }, 300); // Matches opacity transition
+    }, 100); // Time before fade starts
 
-    // Mantieni solo maxPixels
-    if (pixels.length > maxPixels) {
+    // Limit array size
+    while (pixels.length > maxPixels) {
       const oldPixel = pixels.shift();
-      oldPixel.remove();
+      if (oldPixel && oldPixel.parentNode) oldPixel.remove();
     }
   }
 
   // 4. Screen Flicker
   initScreenFlicker() {
-    setInterval(() => {
-      if (!this.effectsEnabled) return;
+    if (this.flickerInterval) clearInterval(this.flickerInterval); // Clear previous if any
 
-      // Ridotta probabilità di flicker a 1%
+    this.flickerInterval = setInterval(() => {
+      if (!this.effectsEnabled) return; // Check flag
+
       if (Math.random() < 0.01) {
+        // Low probability
         const arcadeScreen = document.querySelector(".arcade-screen");
         if (arcadeScreen) {
           arcadeScreen.classList.add("screen-flicker");
           setTimeout(() => {
-            arcadeScreen.classList.remove("screen-flicker");
-          }, 100);
+            // Check element still exists
+            if (arcadeScreen) arcadeScreen.classList.remove("screen-flicker");
+          }, 100); // Flicker duration
         }
       }
-    }, 5000);
+    }, 5000); // Interval check
+    console.log("Screen Flicker Interval Initialized.");
   }
 
   // 5. Static Noise
   initStaticNoise() {
+    const arcadeScreen = document.querySelector(".arcade-screen");
+    if (!arcadeScreen) return;
+
     const canvas = document.createElement("canvas");
     canvas.className = "static-noise";
-    canvas.width = 200;
+    canvas.width = 200; // Smaller canvas for performance
     canvas.height = 200;
-
     const ctx = canvas.getContext("2d");
 
-    const arcadeScreen = document.querySelector(".arcade-screen");
-    if (arcadeScreen) {
-      arcadeScreen.appendChild(canvas);
-    }
+    arcadeScreen.appendChild(canvas);
+    // Set initial visibility based on state
+    canvas.style.display = this.effectsEnabled ? "block" : "none";
 
-    // Update meno frequente per migliori performance
-    setInterval(() => {
-      if (!this.effectsEnabled) return;
+    if (this.noiseInterval) clearInterval(this.noiseInterval); // Clear previous if any
+
+    this.noiseInterval = setInterval(() => {
+      // Update is controlled by canvas visibility now
       this.updateStaticNoise(ctx, canvas);
-    }, 100);
+    }, 100); // Update frequency
+    console.log("Static Noise Interval Initialized.");
   }
 
   updateStaticNoise(ctx, canvas) {
+    // Only run if effects are on AND canvas is visible
+    if (!this.effectsEnabled || !canvas || canvas.style.display === "none")
+      return;
+
     const imageData = ctx.createImageData(canvas.width, canvas.height);
     const data = imageData.data;
-
     for (let i = 0; i < data.length; i += 4) {
       const value = Math.random() * 255;
-      data[i] = value;
-      data[i + 1] = value;
-      data[i + 2] = value;
-      data[i + 3] = 3; // Ancora più trasparente
+      data[i] = value; // R
+      data[i + 1] = value; // G
+      data[i + 2] = value; // B
+      data[i + 3] = 3; // Alpha (very low)
     }
-
     ctx.putImageData(imageData, 0, 0);
   }
 
   // 6. RGB Shift on Click
   initRGBShift() {
     document.addEventListener("click", (e) => {
-      if (!this.effectsEnabled) return;
+      if (!this.effectsEnabled) return; // Check flag
 
+      // Check if the clicked element is one of the interactive ones
       if (
-        e.target.classList.contains("menu-item") ||
+        e.target.closest(".menu-item") || // Portfolio menu
         e.target.id === "press-start-button" ||
-        e.target.classList.contains("exit-button")
+        e.target.id === "options-button" || // Options gear button
+        e.target.closest(".menu-option-button") // Options menu items
       ) {
         const arcadeScreen = document.querySelector(".arcade-screen");
         if (arcadeScreen) {
           arcadeScreen.classList.add("rgb-shift");
           setTimeout(() => {
-            arcadeScreen.classList.remove("rgb-shift");
-          }, 200);
+            // Check element still exists
+            if (arcadeScreen) arcadeScreen.classList.remove("rgb-shift");
+          }, 200); // Duration of shift
         }
       }
     });
+    console.log("RGB Shift Listener Initialized.");
   }
-
-  // Toggle per abilitare/disabilitare effetti
-  addEffectsToggle() {
-    const toggleBtn = document.createElement("button");
-    toggleBtn.className = "effects-toggle";
-    toggleBtn.innerHTML = '<span class="fx-icon">⚡</span> FX';
-    toggleBtn.title = "Toggle retro effects";
-
-    toggleBtn.addEventListener("click", () => {
-      this.effectsEnabled = !this.effectsEnabled;
-      toggleBtn.classList.toggle("disabled", !this.effectsEnabled);
-
-      const effectElements = document.querySelectorAll(
-        ".crt-overlay, .static-noise, .pixel-trail"
-      );
-
-      if (!this.effectsEnabled) {
-        // Disabilita tutti gli effetti
-        effectElements.forEach((el) => {
-          el.style.display = "none";
-        });
-      } else {
-        // Riabilita effetti
-        document
-          .querySelectorAll(".crt-overlay, .static-noise")
-          .forEach((el) => {
-            el.style.display = "block";
-          });
-      }
-    });
-
-    document.body.appendChild(toggleBtn);
-  }
-}
+} // End RetroEffects Class
