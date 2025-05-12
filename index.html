@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Stefano Spitaleri - Portfolio Retrogaming</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS (dopo Bootstrap per permettere override) -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="arcade-cabinet">
+      <div class="arcade-marquee">
+        <h1 class="marquee-text">SPITALERI'S QUEST</h1>
+      </div>
+      <div class="arcade-screen-bezel">
+        <div class="arcade-screen">
+          <div id="start-screen" class="start-screen-overlay">
+            <div class="start-message">
+              <p class="insert-coin-text">INSERT CV</p>
+              <button id="press-start-button" type="button">PRESS START</button>
+              <!-- type="button" è una buona pratica -->
+              <p class="start-prompt">(Click to Begin Your Adventure)</p>
+            </div>
+          </div>
+
+          <div id="portfolio-content" class="hidden">
+            <div class="scanlines"></div>
+            <!-- Rinominato da .container a .portfolio-inner-container -->
+            <div class="portfolio-inner-container">
+              <header class="title-screen">
+                <h1 class="game-title">STEFANO SPITALERI</h1>
+                <h2 class="subtitle">JUNIOR FULL STACK DEVELOPER</h2>
+                <div class="player-avatar">
+                  <!-- <img src="assets/images/avatar.png" alt="Player Avatar"> -->
+                </div>
+              </header>
+
+              <nav class="main-menu">
+                <ul>
+                  <li>
+                    <a
+                      href="#chi-sono"
+                      class="menu-item"
+                      data-section="chi-sono"
+                      >[ CHI SONO ]</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#tech-skills"
+                      class="menu-item"
+                      data-section="tech-skills"
+                      >[ TECH SKILLS ]</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#esperienze"
+                      class="menu-item"
+                      data-section="esperienze"
+                      >[ ESPERIENZE ]</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#formazione"
+                      class="menu-item"
+                      data-section="formazione"
+                      >[ FORMAZIONE ]</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#certificazioni"
+                      class="menu-item"
+                      data-section="certificazioni"
+                      >[ CERTIFICAZIONI ]</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="#contatti"
+                      class="menu-item"
+                      data-section="contatti"
+                      >[ CONTATTI ]</a
+                    >
+                  </li>
+                </ul>
+              </nav>
+
+              <main id="content-area">
+                <section id="chi-sono" class="game-section hidden">
+                  <h3 class="section-title">// PLAYER_PROFILE_</h3>
+                  <div class="dialogue-box">
+                    <p>
+                      Sono uno Junior Full Stack Developer di 24 anni. Ho
+                      scoperto la programmazione e la tecnologia quando ero un
+                      bambino e da allora ho sempre avuto quella curiosità
+                      nell'approfondire le mie conoscenze nel settore.
+                    </p>
+                    <p>Attualmente residente a Ragusa.</p>
+                  </div>
+                </section>
+
+                <section id="tech-skills" class="game-section hidden">
+                  <h3 class="section-title">// SKILL_TREE_</h3>
+                  <!-- Utilizzo della griglia Bootstrap -->
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <!-- mb-3 per margine inferiore su mobile quando impilati -->
+                      <div class="skill-category">
+                        <h4>> Frontend Development:</h4>
+                        <ul>
+                          <li>
+                            <span class="icon-skill angular">[A]</span>
+                            <p>Angular</p>
+                          </li>
+                          <li>
+                            <span class="icon-skill html">[H]</span>
+                            <p>HTML</p>
+                          </li>
+                          <li>
+                            <span class="icon-skill css">[C]</span>
+                            <p>CSS</p>
+                          </li>
+                          <li>
+                            <span class="icon-skill sass">[S]</span>
+                            <p>Sass</p>
+                          </li>
+                          <li>
+                            <span class="icon-skill js">[J]</span>
+                            <p>JavaScript</p>
+                          </li>
+                          <li>
+                            <span class="icon-skill ts">[T]</span>
+                            <p>TypeScript</p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <div class="skill-category">
+                        <h4>> Backend Development:</h4>
+                        <ul>
+                          <li>
+                            <span class="icon-skill csharp">[C#]</span> C#
+                          </li>
+                          <li>
+                            <span class="icon-skill dotnet">[.N]</span> .NET
+                          </li>
+                          <li>
+                            <span class="icon-skill ef">[E]</span> Entity
+                            Framework
+                          </li>
+                          <li>
+                            <span class="icon-skill tsql">[TS]</span> T-SQL
+                          </li>
+                          <li><span class="icon-skill php">[P]</span> PHP</li>
+                          <li>
+                            <span class="icon-skill python">[Py]</span> PYTHON
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <div class="skill-category">
+                        <h4>> Soft Skills:</h4>
+                        <ul>
+                          <li>Comunicazione</li>
+                          <li>Lavoro di squadra</li>
+                          <li>Problem solving</li>
+                          <li>Precisione</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <div class="skill-category">
+                        <h4>> Lingue:</h4>
+                        <ul>
+                          <li>Italiano (Nativo)</li>
+                          <li>Inglese (B1 - Cert. B2 First Score 144)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section id="esperienze" class="game-section hidden">
+                  <h3 class="section-title">// QUEST_LOG_ (Work)</h3>
+                  <div class="experience-item card-retro">
+                    <h4>
+                      Ergon S.p.A. (Ragusa, RG)
+                      <span class="date-retro">12/2024 - Presente</span>
+                    </h4>
+                    <p class="role-retro">
+                      Sviluppo applicativi web interni per gestione operativa
+                      punti vendita.
+                    </p>
+                    <p><strong>Main Quests:</strong></p>
+                    <ul>
+                      <li>Sviluppo di applicazioni web user-friendly.</li>
+                      <li>
+                        Implementazione sistemi amministrazione e gestione dati.
+                      </li>
+                      <li>
+                        Integrazione tecnologie AI (Gemini) per analisi bolle
+                        fatturazione.
+                      </li>
+                      <li>
+                        Ottimizzazione query e strutture dati (Oracle, Informix,
+                        PostgreSQL).
+                      </li>
+                      <li>
+                        Collaborazione cross-funzionale con team operativi e
+                        responsabili.
+                      </li>
+                    </ul>
+                    <p>
+                      <strong>Tech Stack Used:</strong> PHP, Python, JavaScript,
+                      CSS, HTML5, Oracle DB, Informix, PostgreSQL, Google Gemini
+                      API, DBeaver Ultimate, Database4, SqlServer.
+                    </p>
+                  </div>
+                </section>
+
+                <section id="formazione" class="game-section hidden">
+                  <h3 class="section-title">// TRAINING_GROUNDS_</h3>
+                  <div class="education-item card-retro">
+                    <h4>
+                      Epicode - Bootcamp Full Stack Developer (6 mesi)
+                      <span class="date-retro">03/2024 - 09/2024</span>
+                    </h4>
+                    <p>
+                      Percorso intensivo (1000+ ore) teoria e pratica con
+                      progetti reali. Progetto capstone in C#, .NET, Entity
+                      Framework, HTML, CSS, JavaScript. Voto: 8.8/10
+                    </p>
+                  </div>
+                  <div class="education-item card-retro">
+                    <h4>
+                      Epicode - AI & Prompt Design (6 ore)
+                      <span class="date-retro">03/2024 - 03/2024</span>
+                    </h4>
+                    <p>Introduzione AI con focus su Prompt Engineering.</p>
+                  </div>
+                  <div class="education-item card-retro">
+                    <h4>
+                      I.I.S.S Benedetto Radice - Diploma Perito Informatico
+                      <span class="date-retro">2014 - 2019</span>
+                    </h4>
+                    <p>Voto: 94/100</p>
+                  </div>
+                </section>
+
+                <section id="certificazioni" class="game-section hidden">
+                  <h3 class="section-title">// ACHIEVEMENTS_UNLOCKED_</h3>
+                  <div class="certification-item card-retro">
+                    <h4>
+                      Eipass 7 Moduli User
+                      <span class="date-retro">08/2021</span>
+                    </h4>
+                    <p>
+                      CERTIPASS SRL. Competenze informatiche fondamentali:
+                      sistemi operativi, office automation, web, dati digitali.
+                    </p>
+                  </div>
+                  <div class="certification-item card-retro">
+                    <h4>
+                      B2 First - Score 144 (B1 Level)
+                      <span class="date-retro">02/2018</span>
+                    </h4>
+                    <p>
+                      Cambridge University Press & Assessment English.
+                      Competenze intermedie lingua inglese.
+                    </p>
+                  </div>
+                </section>
+
+                <section id="contatti" class="game-section hidden">
+                  <h3 class="section-title">// CONTACT_NPC_</h3>
+                  <ul class="contact-list">
+                    <li>
+                      <span class="icon-contact mail"></span>
+                      <a href="mailto:sspitaleri26@gmail.com"
+                        >sspitaleri26@gmail.com</a
+                      >
+                    </li>
+                    <li>
+                      <span class="icon-contact phone"></span> +39 3517434672
+                    </li>
+                    <li>
+                      <span class="icon-contact linkedin"></span>
+                      <a
+                        href="https://www.linkedin.com/in/stefano-spitaleri/"
+                        target="_blank"
+                        >LinkedIn</a
+                      >
+                    </li>
+                    <li>
+                      <span class="icon-contact github"></span>
+                      <a href="https://github.com/Stefanospi" target="_blank"
+                        >GitHub</a
+                      >
+                    </li>
+                    <li>
+                      <span class="icon-contact location"></span> Bronte,
+                      Catania (Residente a Ragusa)
+                    </li>
+                  </ul>
+                </section>
+              </main>
+
+              <footer class="game-footer">
+                <p class="disclaimer">
+                  Autorizzo il trattamento dei miei dati personali presenti nel
+                  CV ai sensi dell'art. 13d. Igs. 30 giugno 2003 n. 196 e
+                  dell'art. 13 GDPR 679/16.
+                </p>
+                <p class="hire-me-flashing">
+                  © 2024 STEFANO SPITALERI - PRESS START TO HIRE!
+                </p>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="arcade-controls-panel">
+        <div class="joystick-base"></div>
+        <div class="button red"></div>
+        <div class="button blue"></div>
+      </div>
+    </div>
+
+    <audio
+      id="start-sound"
+      src="assets/sounds/start.wav"
+      preload="auto"
+    ></audio>
+    <audio
+      id="menu-hover-sound"
+      src="assets/sounds/menu.wav"
+      preload="auto"
+    ></audio>
+    <audio
+      id="menu-select-sound"
+      src="assets/sounds/menu_select.wav"
+      preload="auto"
+    ></audio>
+
+    <!-- Bootstrap JS Bundle (Popper.js incluso, opzionale se non usi componenti JS di Bootstrap) -->
+
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

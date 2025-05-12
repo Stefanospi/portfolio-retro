@@ -1,0 +1,1744 @@
+/* Reset e Stili Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Press Start 2P", monospace, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: #1a1a2d;
+  color: #ffffff;
+  line-height: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  padding: 40px; /* Più padding su desktop */
+}
+
+.hidden {
+  display: none !important;
+  opacity: 0;
+}
+
+/* --- Arcade Cabinet Styles --- */
+.arcade-cabinet {
+  width: 90%;
+  max-width: 900px; /* Aumentato per desktop */
+  background: linear-gradient(145deg, #3a3a5a, #2a2a4a);
+  border: 8px solid #1c1c3c;
+  border-radius: 30px 30px 10px 10px;
+  padding: 20px; /* Aumentato per desktop */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.3),
+    0 0 0 5px #111, 0 0 15px rgba(0, 255, 0, 0.1),
+    0 0 30px rgba(0, 255, 255, 0.05), 0 0 45px rgba(255, 0, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.arcade-marquee {
+  background-color: #000;
+  color: #ffff00;
+  padding: 10px 5px;
+  text-align: center;
+  border: 3px solid #444;
+  border-bottom: 5px solid #222;
+  margin-bottom: 10px;
+  border-radius: 10px 10px 0 0;
+  box-shadow: inset 0 0 10px #ffff0033;
+  background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+  background-size: 400% 400%;
+  animation: retro-wave 15s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+@keyframes retro-wave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.arcade-marquee .marquee-text {
+  font-size: clamp(1.4em, 3vw, 2em); /* Aumentato per desktop */
+  text-shadow: 2px 2px #ff0000;
+  animation: blinkTitle 1.5s infinite alternate;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0;
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes blinkTitle {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.7;
+  }
+}
+
+.arcade-screen-bezel {
+  background-color: #050515;
+  border: 5px solid #2d2d4d;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
+  margin-bottom: 15px;
+  flex-grow: 1;
+  display: flex;
+}
+
+.arcade-screen {
+  background-color: #000000;
+  width: 100%;
+  min-height: 600px; /* Aumentato per desktop */
+  max-height: 85vh; /* Aumentato per desktop */
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  border: 3px solid #101020;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  filter: contrast(1.02) brightness(1.01);
+  scroll-behavior: smooth;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect x="12" y="12" width="8" height="8" fill="%2300ff00"/></svg>')
+      16 16,
+    crosshair;
+}
+
+.arcade-screen::-webkit-scrollbar {
+  width: 12px;
+}
+.arcade-screen::-webkit-scrollbar-track {
+  background: #101020;
+  border-left: 1px solid #333;
+}
+.arcade-screen::-webkit-scrollbar-thumb {
+  background-color: #00ff00;
+  border: 2px solid #000020;
+}
+.arcade-screen::-webkit-scrollbar-thumb:hover {
+  background-color: #ffff00;
+}
+
+/* --- Start Screen Overlay --- */
+.arcade-screen .start-screen-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.9),
+    rgba(0, 0, 0, 0.95)
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.start-screen-overlay {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.85)
+  );
+}
+
+.start-screen-overlay.hidden {
+  display: none !important;
+  opacity: 0;
+}
+
+.start-screen-overlay.hiding {
+  animation: start-screen-hide 0.5s ease-out forwards;
+}
+
+@keyframes start-screen-hide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+
+.start-screen-overlay .start-message {
+  animation: start-message-intro 1s ease-out;
+}
+
+@keyframes start-message-intro {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.start-screen-overlay .start-message .insert-coin-text {
+  font-size: clamp(2.2em, 5vw, 3em); /* Aumentato per desktop */
+  color: #ffff00;
+  text-shadow: 2px 2px #ff0000, 0 0 10px #ffff00;
+  animation: blinkInsertCoin 0.8s infinite alternate;
+  margin-bottom: 25px;
+}
+
+@keyframes blinkInsertCoin {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+.start-screen-overlay #press-start-button {
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(1.5em, 3vw, 2.2em); /* Aumentato per desktop */
+  color: #ffffff;
+  background-color: #ff0000;
+  border: 3px solid #ffff00;
+  padding: 15px 30px; /* Più padding per desktop */
+  cursor: pointer;
+  text-shadow: 1px 1px #000000;
+  box-shadow: 0 0 10px #ff0000cc, inset 0 0 5px rgba(255, 255, 255, 0.2);
+  transition: all 0.1s ease-in-out;
+  margin-bottom: 20px;
+  animation: pulseStartButton 1.2s infinite ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+#press-start-button::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s;
+  opacity: 0;
+}
+
+#press-start-button:hover::before {
+  animation: button-shine 0.6s ease-in-out;
+}
+
+@keyframes button-shine {
+  0% {
+    transform: rotate(45deg) translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(45deg) translateX(100%);
+    opacity: 0;
+  }
+}
+
+.start-screen-overlay #press-start-button:hover {
+  background-color: #ffff00;
+  color: #ff0000;
+  border-color: #ff0000;
+  animation-play-state: paused;
+}
+
+.start-screen-overlay #press-start-button:active {
+  transform: scale(0.98) !important;
+  box-shadow: 0 0 5px #ff0000, inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes pulseStartButton {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px #ff0000cc, inset 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #ff0000, inset 0 0 8px rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 10px #ff0000cc, inset 0 0 5px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.start-screen-overlay .start-prompt {
+  font-size: clamp(0.8em, 2.5vw, 0.9em);
+  color: #00ff00;
+  animation: blinkPrompt 2s infinite linear;
+}
+
+@keyframes blinkPrompt {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* --- Boot Sequence --- */
+.arcade-screen .boot-sequence {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  font-size: 0.9em;
+  opacity: 1 !important;
+}
+
+.boot-sequence {
+  pointer-events: all;
+}
+
+.boot-sequence * {
+  pointer-events: none;
+}
+
+.boot-text {
+  text-align: center;
+  color: #00ff00;
+  font-family: "Press Start 2P", monospace;
+  position: relative;
+  z-index: 102;
+  font-size: 1.2em; /* Aumentato per desktop */
+}
+
+.boot-text p {
+  margin: 15px 0;
+  animation: boot-text-glow 0.5s ease-in-out;
+}
+
+@keyframes boot-text-glow {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.boot-text p:nth-child(1) {
+  font-size: 1.2em;
+  color: #ffff00;
+  text-shadow: 0 0 10px #ffff00;
+}
+
+.boot-text p:nth-child(2) {
+  font-size: 0.9em;
+  color: #00ffff;
+  text-shadow: 0 0 8px #00ffff;
+}
+
+.loading-dots {
+  font-size: 1em;
+  color: #00ff00;
+  text-shadow: 0 0 10px #00ff00;
+  animation: loading-pulse 1s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.loading-dots span::after {
+  content: "";
+  animation: dots 1.5s steps(3, end) infinite;
+}
+
+@keyframes dots {
+  0% {
+    content: "";
+  }
+  33% {
+    content: ".";
+  }
+  66% {
+    content: "..";
+  }
+  100% {
+    content: "...";
+  }
+}
+
+.loading-dots.ready {
+  color: #ffff00 !important;
+  font-size: 1.2em;
+  text-shadow: 0 0 20px #ffff00;
+  animation: ready-flash 0.5s ease-in-out;
+}
+
+@keyframes ready-flash {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.progress-bar {
+  width: 400px; /* Aumentato per desktop */
+  height: 35px; /* Aumentato per desktop */
+  border: 3px solid #00ff00;
+  margin: 30px auto;
+  background: #001100;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 255, 0, 0.2);
+  z-index: 102;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff00, #00ff88);
+  width: 0%;
+  transition: width 0.2s ease;
+  box-shadow: 0 0 10px #00ff00, inset 0 0 5px rgba(0, 255, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: progress-shine 1s linear infinite;
+}
+
+@keyframes progress-shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.boot-sequence.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* --- Exit Button --- */
+.exit-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 0, 0, 0.9);
+  color: #ffffff;
+  border: 2px solid #ffff00;
+  padding: 8px 16px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.8em;
+  cursor: pointer;
+  z-index: 1001;
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px #000000;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  animation: exit-button-pulse 2s ease-in-out infinite;
+  pointer-events: all;
+}
+
+.exit-button:hover {
+  background: #ffff00;
+  color: #ff0000;
+  border-color: #ff0000;
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+  transform: scale(1.1);
+  animation-play-state: paused;
+}
+
+.exit-button:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes exit-button-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+  }
+}
+
+/* --- Portfolio Content --- */
+#portfolio-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000020;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  animation: portfolio-intro 0.5s ease-out;
+}
+
+@keyframes portfolio-intro {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#portfolio-content.hidden {
+  display: none !important;
+  opacity: 0;
+}
+
+#portfolio-content .scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 3px
+  );
+  z-index: 10;
+}
+
+#portfolio-content .portfolio-inner-container {
+  width: 100%;
+  flex-grow: 1;
+  margin: 0 auto;
+  border: 3px solid #00ffff;
+  padding: 10px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header / Schermata Titolo INTERNA */
+#portfolio-content .title-screen {
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-bottom: 3px dashed #ffff00;
+  flex-shrink: 0;
+}
+
+#portfolio-content .game-title {
+  font-size: clamp(1.8em, 3vw, 2.2em); /* Aumentato per desktop */
+  color: #ff00ff;
+  text-shadow: 2px 2px #00ffff, 0 0 3px currentColor, 0 0 6px currentColor;
+  margin-bottom: 4px;
+  animation: blinkTitle 1.5s infinite alternate;
+}
+
+#portfolio-content .game-title:empty::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1.2em;
+  background: currentColor;
+  animation: cursor-blink 1s infinite;
+}
+
+@keyframes cursor-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+#portfolio-content .subtitle {
+  font-size: clamp(1em, 2vw, 1.3em); /* Aumentato per desktop */
+  color: #00ff00;
+  margin-bottom: 8px;
+}
+
+#portfolio-content .player-avatar img {
+  width: 45px;
+  height: 45px;
+  border: 2px solid #fff;
+  image-rendering: pixelated;
+  -moz-image-rendering: crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Menu Principale INTERNO */
+#portfolio-content .main-menu {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+#portfolio-content .main-menu ul {
+  list-style: none;
+  text-align: center;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+#portfolio-content .main-menu li {
+  margin: 4px 0;
+}
+
+#portfolio-content .main-menu .menu-item {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: clamp(1em, 2vw, 1.2em); /* Aumentato per desktop */
+  padding: 8px 15px; /* Più padding per desktop */
+  border: 2px solid transparent;
+  display: inline-block;
+  transition: all 0.15s ease-in-out;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect x="8" y="8" width="16" height="16" fill="%23ff00ff"/></svg>')
+      16 16,
+    pointer;
+}
+
+#portfolio-content .main-menu .menu-item:hover,
+#portfolio-content .main-menu .menu-item.active {
+  background-color: #ff00ff;
+  color: #000000;
+  border-color: #ffff00;
+  text-shadow: 1px 1px #00ffff, 0 0 3px #ff00ff, 0 0 6px #ff00ff;
+}
+
+.menu-item:hover {
+  animation: retro-glow 0.3s ease-in-out;
+}
+
+@keyframes retro-glow {
+  0% {
+    box-shadow: 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
+  }
+  100% {
+    box-shadow: 0 0 5px #ff00ff;
+  }
+}
+
+/* Area principale del contenuto delle sezioni */
+#portfolio-content main#content-area {
+  flex-grow: 1;
+}
+
+/* Sezioni Contenuto INTERNE */
+#portfolio-content .game-section {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #00ff00;
+  background-color: rgba(10, 20, 40, 0.6);
+}
+
+#portfolio-content .section-title {
+  font-size: clamp(1.2em, 2.5vw, 1.5em); /* Aumentato per desktop */
+  color: #ffff00;
+  margin-bottom: 10px;
+  border-bottom: 2px dashed #00ffff;
+  padding-bottom: 5px;
+  text-shadow: 0 0 3px currentColor, 0 0 6px currentColor;
+}
+
+/* Dialogue Box (Chi Sono) */
+#portfolio-content .dialogue-box {
+  border: 2px solid #ffffff;
+  padding: 8px;
+  background-color: #000030;
+}
+
+#portfolio-content .dialogue-box p {
+  margin-bottom: 5px;
+  font-size: 0.9em; /* Aumentato per desktop */
+}
+
+/* Skills */
+#portfolio-content .skill-category {
+  margin-bottom: 8px;
+}
+
+#portfolio-content .skill-category h4 {
+  color: #00ffff;
+  margin-bottom: 5px;
+  font-size: 1em; /* Aumentato per desktop */
+}
+
+#portfolio-content .skill-category ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+#portfolio-content .skill-category li {
+  margin-bottom: 5px;
+  color: #cccccc;
+  font-size: 0.9em; /* Aumentato per desktop */
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+  justify-content: space-between;
+}
+
+#portfolio-content .icon-skill {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  color: #ff00ff;
+  font-weight: bold;
+  text-align: center;
+  line-height: 12px;
+}
+
+/* Card Retro */
+#portfolio-content .card-retro {
+  border: 2px solid #ff00ff;
+  padding: 8px;
+  margin-bottom: 8px;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+#portfolio-content .card-retro h4 {
+  color: #00ff00;
+  margin-bottom: 3px;
+  font-size: 1.1em; /* Aumentato per desktop */
+}
+
+#portfolio-content .date-retro {
+  font-size: 0.6em;
+  color: #cccccc;
+  float: right;
+}
+
+#portfolio-content .role-retro {
+  font-style: italic;
+  color: #00ffff;
+  margin-bottom: 5px;
+  font-size: 0.75em;
+}
+
+#portfolio-content .card-retro ul {
+  list-style: square;
+  margin-left: 12px;
+  margin-top: 5px;
+  font-size: 0.7em;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+#portfolio-content .card-retro ul li {
+  margin-bottom: 2px;
+}
+
+#portfolio-content .card-retro p {
+  font-size: 0.9em; /* Aumentato per desktop */
+  margin-bottom: 0.5rem;
+}
+
+/* Contatti */
+#portfolio-content .contact-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+#portfolio-content .contact-list li {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  font-size: 0.9em; /* Aumentato per desktop */
+}
+
+#portfolio-content .contact-list a {
+  color: #00ffff;
+  text-decoration: none;
+}
+
+#portfolio-content .contact-list a:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+#portfolio-content .icon-contact {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  background-color: #555;
+  border: 1px solid #888;
+}
+
+/* Footer INTERNO */
+#portfolio-content .game-footer {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 8px;
+  border-top: 3px dashed #ffff00;
+  flex-shrink: 0;
+}
+
+#portfolio-content .game-footer p {
+  font-size: 0.6em;
+  color: #aaaaaa;
+  margin-bottom: 0.25rem;
+}
+
+#portfolio-content .disclaimer {
+  font-size: 0.5em;
+  margin-bottom: 5px;
+  color: #777777;
+}
+
+/* --- Arcade Controls Panel (Decorativo) --- */
+.arcade-controls-panel {
+  background-color: #1c1c3c;
+  padding: 15px;
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  border-top: 3px solid #444;
+  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+.joystick-base {
+  width: 40px;
+  height: 20px;
+  background-color: #555;
+  border-radius: 5px;
+  position: relative;
+}
+
+.joystick-base::before {
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 30px;
+  background-color: #222;
+  border-radius: 3px;
+}
+
+.joystick-base::after {
+  content: "";
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  border: 2px solid #aa0000;
+}
+
+.arcade-controls-panel .button {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 3px solid #111;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.arcade-controls-panel .button.red {
+  background-color: #d00000;
+}
+
+.arcade-controls-panel .button.blue {
+  background-color: #0000d0;
+}
+
+.arcade-controls-panel .button:active {
+  transform: scale(0.95);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ===================== */
+/* RETRO VISUAL EFFECTS  */
+/* ===================== */
+
+/* 1. CRT Display Effect */
+.crt-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.crt-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 4px,
+    rgba(0, 0, 0, 0.03) 4px,
+    rgba(0, 0, 0, 0.03) 5px
+  );
+  animation: scanlines 20s linear infinite;
+}
+
+@keyframes scanlines {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10px);
+  }
+}
+
+.crt-vignette {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(0, 0, 0, 0.15) 95%
+  );
+  pointer-events: none;
+}
+
+.crt-flicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(18, 16, 16, 0.02);
+  opacity: 0;
+  animation: subtle-flicker 0.5s infinite;
+}
+
+@keyframes subtle-flicker {
+  0% {
+    opacity: 0.02;
+  }
+  50% {
+    opacity: 0.01;
+  }
+  100% {
+    opacity: 0.02;
+  }
+}
+
+/* 2. Glitch Effect */
+.glitch-effect {
+  position: relative;
+  animation: glitch-skew 0.3s ease-in-out;
+}
+
+.glitch-copy-1,
+.glitch-copy-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.glitch-copy-1 {
+  color: #ff00ff;
+  z-index: -1;
+  animation: glitch-1 0.3s ease-in-out;
+  mix-blend-mode: screen;
+}
+
+.glitch-copy-2 {
+  color: #00ffff;
+  z-index: -2;
+  animation: glitch-2 0.3s ease-in-out;
+  mix-blend-mode: screen;
+}
+
+@keyframes glitch-skew {
+  0%,
+  100% {
+    transform: skew(0deg);
+  }
+  50% {
+    transform: skew(0.5deg);
+  }
+}
+
+@keyframes glitch-1 {
+  0%,
+  100% {
+    clip-path: polygon(0 0%, 100% 0%, 100% 100%, 0% 100%);
+    transform: translateX(0);
+  }
+  20% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 16%, 0 16%);
+    transform: translateX(-1px);
+  }
+  80% {
+    clip-path: polygon(0 80%, 100% 80%, 100% 81%, 0 81%);
+    transform: translateX(1px);
+  }
+}
+
+@keyframes glitch-2 {
+  0%,
+  100% {
+    clip-path: polygon(0 0%, 100% 0%, 100% 100%, 0% 100%);
+    transform: translateX(0);
+  }
+  40% {
+    clip-path: polygon(0 44%, 100% 44%, 100% 45%, 0 45%);
+    transform: translateX(1px);
+  }
+  60% {
+    clip-path: polygon(0 60%, 100% 60%, 100% 61%, 0 61%);
+    transform: translateX(-1px);
+  }
+}
+
+/* 3. Pixel Trail */
+.pixel-trail {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #00ff00;
+  box-shadow: 0 0 2px #00ff00;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 0.3s ease;
+  image-rendering: pixelated;
+  opacity: 0.3;
+}
+
+/* 4. Screen Flicker */
+.screen-flicker {
+  animation: screen-flicker-anim 0.1s ease-in-out;
+}
+
+@keyframes screen-flicker-anim {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+/* 5. Static Noise */
+.static-noise {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.005;
+  z-index: 1;
+  pointer-events: none;
+  image-rendering: pixelated;
+  mix-blend-mode: normal;
+}
+
+/* 6. RGB Shift */
+.rgb-shift {
+  animation: rgb-shift-anim 0.2s ease-in-out;
+}
+
+@keyframes rgb-shift-anim {
+  0%,
+  100% {
+    filter: none;
+  }
+  50% {
+    filter: drop-shadow(-1px 0 0 rgba(255, 0, 0, 0.5))
+      drop-shadow(1px 0 0 rgba(0, 255, 255, 0.5));
+  }
+}
+
+/* 7. Screen Power On Effect */
+.screen-power-on {
+  animation: power-on 0.8s ease-out;
+}
+
+@keyframes power-on {
+  0% {
+    filter: brightness(0) contrast(0);
+    transform: scale(0, 0.005);
+  }
+  30% {
+    filter: brightness(0.3) contrast(0.3);
+    transform: scale(0.3, 0.01);
+  }
+  60% {
+    filter: brightness(0.8) contrast(0.8);
+    transform: scale(0.9, 0.5);
+  }
+  100% {
+    filter: brightness(1) contrast(1);
+    transform: scale(1);
+  }
+}
+
+/* 8. Glitch Transition Effect */
+.glitch-transition {
+  animation: glitch-transition 0.2s ease-in-out;
+}
+
+@keyframes glitch-transition {
+  0%,
+  100% {
+    transform: translateX(0);
+    filter: none;
+  }
+  25% {
+    transform: translateX(-1px);
+  }
+  75% {
+    transform: translateX(1px);
+  }
+}
+
+/* 9. Effects Toggle Button */
+.effects-toggle {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #00ff00;
+  border: 2px solid #00ff00;
+  padding: 8px 12px;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.7em;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.effects-toggle:hover {
+  background: rgba(0, 255, 0, 0.2);
+  box-shadow: 0 0 10px #00ff00;
+  transform: scale(1.05);
+}
+
+.effects-toggle.disabled {
+  color: #666;
+  border-color: #666;
+  background: rgba(34, 34, 34, 0.8);
+}
+
+.effects-toggle .fx-icon {
+  display: inline-block;
+  animation: icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Arcade screen enhancements */
+.arcade-screen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.015) 3px,
+      rgba(255, 255, 255, 0.015) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.015) 3px,
+      rgba(255, 255, 255, 0.015) 4px
+    );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Phosphor glow */
+.arcade-screen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 255, 0, 0.015) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Chromatic Aberration */
+.arcade-screen > * {
+  animation: chromatic-aberration 10s infinite;
+}
+
+@keyframes chromatic-aberration {
+  0%,
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+  50% {
+    text-shadow: -0.3px 0 0 rgba(255, 0, 0, 0.3),
+      0.3px 0 0 rgba(0, 255, 255, 0.3);
+  }
+}
+
+/* Color bleeding */
+.game-section * {
+  text-shadow: 0.3px 0 0 rgba(255, 0, 0, 0.1), -0.3px 0 0 rgba(0, 255, 255, 0.1);
+}
+
+/* Pixel Perfect Scaling */
+* {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Button animations */
+button,
+.menu-item {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect x="8" y="8" width="16" height="16" fill="%23ff00ff"/></svg>')
+      16 16,
+    pointer;
+}
+
+/* ===================== */
+/* TABLET STYLES         */
+/* ===================== */
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  body {
+    padding: 20px;
+  }
+
+  .arcade-cabinet {
+    width: 95%;
+    max-width: 800px;
+    padding: 15px;
+  }
+
+  .arcade-screen {
+    min-height: 500px;
+    max-height: 80vh;
+  }
+
+  .arcade-marquee .marquee-text {
+    font-size: 1.5em;
+  }
+
+  .start-screen-overlay .start-message .insert-coin-text {
+    font-size: 2.2em;
+  }
+
+  .start-screen-overlay #press-start-button {
+    font-size: 1.6em;
+    padding: 12px 25px;
+  }
+
+  #portfolio-content .game-title {
+    font-size: 1.7em;
+  }
+
+  #portfolio-content .subtitle {
+    font-size: 1.1em;
+  }
+
+  #portfolio-content .main-menu .menu-item {
+    font-size: 1em;
+    padding: 7px 12px;
+  }
+
+  .boot-text {
+    font-size: 1em;
+  }
+
+  .progress-bar {
+    width: 350px;
+    height: 30px;
+  }
+}
+
+/* ===================== */
+/* MOBILE FULLSCREEN     */
+/* ===================== */
+
+@media (max-width: 768px) {
+  /* Remove all padding and make fullscreen */
+  body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* Cabinet fills entire screen */
+  .arcade-cabinet {
+    width: 100%;
+    height: 100vh;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  /* Marquee adjustments for mobile */
+  .arcade-marquee {
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 8px 5px;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+
+  .arcade-marquee .marquee-text {
+    font-size: 1.2em;
+  }
+
+  /* Screen bezel fills space */
+  .arcade-screen-bezel {
+    border-radius: 0;
+    border: none;
+    padding: 0;
+    margin-bottom: 0;
+    flex-grow: 1;
+  }
+
+  /* Screen fills entire available space */
+  .arcade-screen {
+    min-height: auto;
+    max-height: none;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide decorative controls on mobile */
+  .arcade-controls-panel {
+    display: none;
+  }
+
+  /* Adjust start screen for mobile */
+  .start-screen-overlay .start-message .insert-coin-text {
+    font-size: 1.8em;
+  }
+
+  .start-screen-overlay #press-start-button {
+    font-size: 1.2em;
+    padding: 10px 20px;
+  }
+
+  .start-screen-overlay .start-prompt {
+    font-size: 0.8em;
+  }
+
+  /* Portfolio content adjustments */
+  #portfolio-content .portfolio-inner-container {
+    border: none;
+    border-radius: 0;
+    padding: 10px;
+  }
+
+  #portfolio-content .game-title {
+    font-size: 1.3em;
+  }
+
+  #portfolio-content .subtitle {
+    font-size: 0.9em;
+  }
+
+  #portfolio-content .main-menu .menu-item {
+    font-size: 0.85em;
+    padding: 5px 10px;
+  }
+
+  #portfolio-content .main-menu li {
+    margin: 3px 0;
+  }
+
+  #portfolio-content .section-title {
+    font-size: 1em;
+  }
+
+  /* Content text sizes for mobile */
+  #portfolio-content .dialogue-box p {
+    font-size: 0.75em;
+  }
+
+  #portfolio-content .skill-category h4 {
+    font-size: 0.85em;
+  }
+
+  #portfolio-content .skill-category li {
+    font-size: 0.7em;
+  }
+
+  #portfolio-content .card-retro h4 {
+    font-size: 0.85em;
+  }
+
+  #portfolio-content .card-retro p,
+  #portfolio-content .card-retro ul {
+    font-size: 0.7em;
+  }
+
+  #portfolio-content .contact-list li {
+    font-size: 0.75em;
+  }
+
+  /* Fixed position elements for mobile */
+  .effects-toggle {
+    font-size: 0.7em;
+    padding: 6px 10px;
+    bottom: 10px;
+    right: 10px;
+  }
+
+  .exit-button {
+    font-size: 0.8em;
+    padding: 6px 12px;
+    top: 10px;
+    right: 10px;
+  }
+
+  /* Boot sequence adjustments */
+  .arcade-screen .boot-sequence {
+    font-size: 0.8em;
+  }
+
+  .boot-text {
+    font-size: 0.9em;
+  }
+
+  .progress-bar {
+    width: 250px;
+    height: 22px;
+  }
+
+  /* Disable heavy effects on mobile */
+  .pixel-trail,
+  .static-noise {
+    display: none;
+  }
+
+  .crt-flicker {
+    animation: none;
+  }
+}
+
+/* ===================== */
+/* SMALL MOBILE PHONES   */
+/* ===================== */
+
+@media (max-width: 480px) {
+  /* Even smaller text for very small phones */
+  .arcade-marquee .marquee-text {
+    font-size: 1em;
+  }
+
+  .start-screen-overlay .start-message .insert-coin-text {
+    font-size: 1.5em;
+  }
+
+  .start-screen-overlay #press-start-button {
+    font-size: 1em;
+    padding: 8px 16px;
+  }
+
+  #portfolio-content .game-title {
+    font-size: 1.1em;
+  }
+
+  #portfolio-content .subtitle {
+    font-size: 0.8em;
+  }
+
+  #portfolio-content .main-menu .menu-item {
+    font-size: 0.75em;
+    padding: 4px 8px;
+  }
+
+  #portfolio-content .section-title {
+    font-size: 0.9em;
+  }
+
+  /* Even smaller content text */
+  #portfolio-content .dialogue-box p,
+  #portfolio-content .skill-category li,
+  #portfolio-content .card-retro p,
+  #portfolio-content .card-retro ul,
+  #portfolio-content .contact-list li {
+    font-size: 0.65em;
+  }
+
+  #portfolio-content .skill-category h4 {
+    font-size: 0.75em;
+  }
+
+  #portfolio-content .card-retro h4 {
+    font-size: 0.8em;
+  }
+
+  /* Smaller buttons */
+  .exit-button {
+    font-size: 0.7em;
+    padding: 5px 10px;
+  }
+
+  .effects-toggle {
+    font-size: 0.6em;
+    padding: 5px 8px;
+  }
+
+  /* Smaller boot sequence */
+  .arcade-screen .boot-sequence {
+    font-size: 0.7em;
+  }
+
+  .boot-text {
+    font-size: 0.7em;
+  }
+
+  .progress-bar {
+    width: 200px;
+    height: 18px;
+  }
+
+  /* Remove more effects on very small phones */
+  .crt-overlay {
+    display: none;
+  }
+
+  .glitch-effect {
+    animation: none;
+  }
+}
+
+/* ===================== */
+/* LANDSCAPE MOBILE      */
+/* ===================== */
+
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Reduce vertical spacing in landscape */
+  .arcade-marquee {
+    padding: 5px;
+  }
+
+  .arcade-marquee .marquee-text {
+    font-size: 1em;
+  }
+
+  #portfolio-content .title-screen {
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+
+  #portfolio-content .game-title {
+    font-size: 1.1em;
+    margin-bottom: 2px;
+  }
+
+  #portfolio-content .subtitle {
+    font-size: 0.8em;
+    margin-bottom: 5px;
+  }
+
+  #portfolio-content .main-menu {
+    margin-bottom: 5px;
+  }
+
+  #portfolio-content .main-menu li {
+    margin: 2px 0;
+  }
+
+  #portfolio-content .game-section {
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+
+  /* Adjust boot sequence for landscape */
+  .boot-text {
+    font-size: 0.8em;
+  }
+
+  .boot-text p {
+    margin: 10px 0;
+  }
+
+  .progress-bar {
+    width: 250px;
+    height: 20px;
+    margin: 15px auto;
+  }
+}
+
+/* ===================== */
+/* HIGH DPI SCREENS      */
+/* ===================== */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Sharper borders for retina displays */
+  .arcade-cabinet,
+  .arcade-screen,
+  .menu-item,
+  .game-section,
+  .card-retro {
+    border-width: 2px;
+  }
+
+  /* Crisp pixel rendering */
+  * {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* ===================== */
+/* SAFE AREA INSETS      */
+/* ===================== */
+
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .arcade-cabinet {
+      padding-top: max(0px, env(safe-area-inset-top));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+    }
+
+    .exit-button {
+      top: max(10px, env(safe-area-inset-top) + 10px);
+      right: max(10px, env(safe-area-inset-right) + 10px);
+    }
+
+    .effects-toggle {
+      bottom: max(10px, env(safe-area-inset-bottom) + 10px);
+      right: max(10px, env(safe-area-inset-right) + 10px);
+    }
+  }
+}
+
+/* Performance optimization */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Reset Bootstrap se necessario */
+#portfolio-content h1,
+#portfolio-content h2,
+#portfolio-content h3,
+#portfolio-content h4,
+#portfolio-content h5,
+#portfolio-content h6 {
+  font-family: "Press Start 2P", monospace;
+  margin-top: 0;
+}
